@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:f_logs/f_logs.dart';
 import 'package:sembast/sembast.dart';
 
-class FlogDao extends Dao {
+class FlogDaoMock extends Dao {
   // Singleton instance
-  static final FlogDao _singleton = FlogDao._();
+  static final FlogDaoMock _singleton = FlogDaoMock._();
 
   /// Singleton accessor
-  static FlogDao get instance => _singleton;
+  static FlogDaoMock get instance => _singleton;
 
   // A private constructor. Allows us to create instances of FlogDao
   // only from within the FlogDao class itself.
-  FlogDao._();
+  FlogDaoMock._();
 
   @override
-  Future<Database> get db => AppDatabase.instance.database;
+  Future<Database> get db => AppDatabase.instance.mockDatabase;
 }

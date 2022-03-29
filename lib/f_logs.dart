@@ -1,7 +1,9 @@
 export 'package:f_logs/constants/constants.dart';
 export 'package:f_logs/constants/db_constants.dart';
 export 'package:f_logs/data/local/app_database.dart';
+export 'package:f_logs/data/local/dao.dart';
 export 'package:f_logs/data/local/flog_dao.dart';
+export 'package:f_logs/data/local/flog_dao_mock.dart';
 export 'package:f_logs/model/datalog/data_log_type.dart';
 export 'package:f_logs/model/flog/flog.dart';
 export 'package:f_logs/model/flog/flog_config.dart';
