@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../f_logs.dart';
 
 class Log {
@@ -56,4 +58,7 @@ class Log {
       stacktrace: json['stacktrace'],
     );
   }
+
+  @override
+  String toString() => jsonEncode(toJson());
 }

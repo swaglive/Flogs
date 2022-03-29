@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
+import 'package:sembast/sembast_memory.dart';
 
 class AppDatabase {
   // Singleton instance
@@ -38,25 +39,38 @@ class AppDatabase {
     return _dbOpenCompleter!.future;
   }
 
-  Future _openDatabase() async {
-    // Get a platform-specific directory where persistent app data can be stored
-    final appDocumentDir = await getApplicationDocumentsDirectory();
+  Future<Database> get mockDatabase async {
+    if (_dbOpenCompleter == null) {
+      _dbOpenCompleter = Completer();
+      _openDatabase(mock: true);
+    }
+    return _dbOpenCompleter!.future;
+  }
 
-    // Path with the form: /platform-specific-directory/demo.db
-    final dbPath = join(appDocumentDir.path, DBConstants.DB_NAME);
-
-    // Check to see if encryption is set, then provide codec
-    // else init normal db with path
-    var database;
-    if (FLog.getDefaultConfigurations().encryptionEnabled &&
-        FLog.getDefaultConfigurations().encryptionKey.isNotEmpty) {
-      // Initialize the encryption codec with a user password
-      var codec = getXXTeaSembastCodec(
-          password: FLog.getDefaultConfigurations().encryptionKey);
-
-      database = await databaseFactoryIo.openDatabase(dbPath, codec: codec);
+  Future _openDatabase({bool mock = false}) async {
+    Database database;
+    if (mock) {
+      final factory = newDatabaseFactoryMemory();
+      database = await factory.openDatabase('test.db');
     } else {
-      database = await databaseFactoryIo.openDatabase(dbPath);
+      // Get a platform-specific directory where persistent app data can be stored
+      final appDocumentDir = await getApplicationDocumentsDirectory();
+
+      // Path with the form: /platform-specific-directory/demo.db
+      final dbPath = join(appDocumentDir.path, DBConstants.DB_NAME);
+
+      // Check to see if encryption is set, then provide codec
+      // else init normal db with path
+      if (FLog.getDefaultConfigurations().encryptionEnabled &&
+          FLog.getDefaultConfigurations().encryptionKey.isNotEmpty) {
+        // Initialize the encryption codec with a user password
+        var codec = getXXTeaSembastCodec(
+            password: FLog.getDefaultConfigurations().encryptionKey);
+
+        database = await databaseFactoryIo.openDatabase(dbPath, codec: codec);
+      } else {
+        database = await databaseFactoryIo.openDatabase(dbPath);
+      }
     }
 
     // Any code awaiting the Completer's future will now start executing
