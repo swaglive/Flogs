@@ -34,7 +34,7 @@ class Formatter {
 
     output = "{${log.className}} ";
     output += "{${log.methodName}} ";
-    output += "{${log.text}} ";
+    output += "{${log.message}} ";
     output += log.exception != 'null' ? "{${log.exception}} " : "";
     output += "{${log.logLevel.toString()}} ";
     output += "{${log.timestamp}} ";
@@ -53,7 +53,7 @@ class Formatter {
 
     output = "[${log.className}] ";
     output += "[${log.methodName}] ";
-    output += "[${log.text}] ";
+    output += "[${log.message}] ";
     output += log.exception != 'null' ? "[${log.exception}] " : "";
     output += "[${log.logLevel.toString()}] ";
     output += "[${log.timestamp}] ";
@@ -73,7 +73,7 @@ class Formatter {
 
     output = "${log.className}$deliminator ";
     output += "${log.methodName}$deliminator ";
-    output += "${log.text}$deliminator ";
+    output += "${log.message}$deliminator ";
     output += log.exception != 'null' ? "${log.exception}$deliminator " : "";
     output += "${log.logLevel.toString()}$deliminator ";
     output += "${log.timestamp} ";
@@ -106,7 +106,7 @@ class Formatter {
           output += "$openingDivider${log.methodName}$closingDivider ";
         }
         if (fieldName == FieldName.TEXT) {
-          output += "$openingDivider${log.text}$closingDivider ";
+          output += "$openingDivider${log.message}$closingDivider ";
         }
         if (fieldName == FieldName.EXCEPTION) {
           output += log.exception != 'null'
