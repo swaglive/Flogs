@@ -426,7 +426,7 @@ class FLog {
       final log = Log(
         className: className,
         methodName: methodName,
-        text: text,
+        message: text,
         logLevel: type,
         dataLogType: dataLogType,
         exception: exception.toString(),

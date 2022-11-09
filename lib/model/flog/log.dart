@@ -10,7 +10,7 @@ class Log {
   String? tag;
   String? className;
   String? methodName;
-  String? text;
+  String? message;
   String? timestamp;
   String? exception;
   String? dataLogType;
@@ -28,7 +28,7 @@ class Log {
     this.tag,
     this.className,
     this.methodName,
-    this.text,
+    this.message,
     this.timestamp,
     this.timeInMillis,
     this.exception,
@@ -43,9 +43,7 @@ class Log {
   Map<String, dynamic> toJson() {
     return {
       'tag': tag,
-      'className': className,
-      'methodName': methodName,
-      'text': text,
+      'message': message,
       'timestamp': timestamp,
       'timeInMillis': timeInMillis,
       'exception': exception,
@@ -63,7 +61,7 @@ class Log {
       tag: json['tag'],
       className: json['className'],
       methodName: json['methodName'],
-      text: json['text'],
+      message: json['message'],
       timestamp: json['timestamp'],
       timeInMillis: json['timeInMillis'],
       exception: json['exception'],
