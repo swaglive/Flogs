@@ -18,6 +18,12 @@ class Log {
   LogLevel? logLevel;
   String? stacktrace;
 
+  /// Any data you want to log.
+  Map<String, dynamic>? context;
+
+  /// Any labels like Github issue labels
+  List<String>? labels;
+
   Log({
     this.tag,
     this.className,
@@ -29,6 +35,8 @@ class Log {
     this.logLevel,
     this.dataLogType,
     this.stacktrace,
+    this.context,
+    this.labels,
   });
 
   /// Converts class to json
@@ -44,6 +52,8 @@ class Log {
       'dataLogType': dataLogType,
       'logLevel': LogLevelConverter.fromEnumToString(logLevel),
       'stacktrace': stacktrace,
+      'context': context,
+      'labels': labels,
     };
   }
 
@@ -60,6 +70,8 @@ class Log {
       dataLogType: json['dataLogType'],
       logLevel: LogLevelConverter.fromStringToEnum(json['logLevel']),
       stacktrace: json['stacktrace'],
+      context: json['context'],
+      labels: json['labels'],
     );
   }
 
