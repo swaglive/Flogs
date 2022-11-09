@@ -7,6 +7,7 @@ class Log {
   // It's automatically generated & unique for every stored Log.
   int? id;
 
+  String? tag;
   String? className;
   String? methodName;
   String? text;
@@ -18,6 +19,7 @@ class Log {
   String? stacktrace;
 
   Log({
+    this.tag,
     this.className,
     this.methodName,
     this.text,
@@ -32,6 +34,7 @@ class Log {
   /// Converts class to json
   Map<String, dynamic> toJson() {
     return {
+      'tag': tag,
       'className': className,
       'methodName': methodName,
       'text': text,
@@ -47,6 +50,7 @@ class Log {
   /// create `Log` from json
   static Log fromJson(Map<String, dynamic> json) {
     return Log(
+      tag: json['tag'],
       className: json['className'],
       methodName: json['methodName'],
       text: json['text'],
