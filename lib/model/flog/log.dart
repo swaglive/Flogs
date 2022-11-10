@@ -21,6 +21,9 @@ class Log {
   /// Any data you want to log.
   Map<String, dynamic>? context;
 
+  /// Global context of the application
+  Map<String, dynamic>? globalContext;
+
   /// Any labels like Github issue labels
   List<String>? labels;
 
@@ -36,6 +39,7 @@ class Log {
     this.dataLogType,
     this.stacktrace,
     this.context,
+    this.globalContext,
     this.labels,
   });
 
@@ -51,6 +55,7 @@ class Log {
       'logLevel': LogLevelConverter.fromEnumToString(logLevel),
       'stacktrace': stacktrace,
       'context': context,
+      'globalContext': globalContext,
       'labels': labels,
     };
   }
@@ -69,6 +74,7 @@ class Log {
       logLevel: LogLevelConverter.fromStringToEnum(json['logLevel']),
       stacktrace: json['stacktrace'],
       context: json['context'],
+      globalContext: json['globalContext'],
       labels: json['labels'],
     );
   }
