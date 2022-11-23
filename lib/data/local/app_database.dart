@@ -39,19 +39,19 @@ class AppDatabase {
     return _dbOpenCompleter!.future;
   }
 
-  Future<Database> get mockDatabase async {
+  Future<Database> get memoryDatabase async {
     if (_dbOpenCompleter == null) {
       _dbOpenCompleter = Completer();
-      _openDatabase(mock: true);
+      _openDatabase(useMemory: true);
     }
     return _dbOpenCompleter!.future;
   }
 
-  Future _openDatabase({bool mock = false}) async {
+  Future _openDatabase({bool useMemory = false}) async {
     Database database;
-    if (mock) {
+    if (useMemory) {
       final factory = newDatabaseFactoryMemory();
-      database = await factory.openDatabase('test.db');
+      database = await factory.openDatabase(DBConstants.DB_NAME);
     } else {
       // Get a platform-specific directory where persistent app data can be stored
       final appDocumentDir = await getApplicationDocumentsDirectory();
