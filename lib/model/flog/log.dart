@@ -27,6 +27,8 @@ class Log {
   /// Any labels like Github issue labels
   List<String>? labels;
 
+  List<String>? dispatcheredTags;
+
   Log({
     this.tag,
     this.className,
@@ -41,6 +43,7 @@ class Log {
     this.context,
     this.globalContext,
     this.labels,
+    this.dispatcheredTags,
   });
 
   /// Converts class to json
@@ -57,6 +60,7 @@ class Log {
       'context': context,
       'globalContext': globalContext,
       'labels': labels,
+      'dispatcheredTags': dispatcheredTags,
     };
   }
 
@@ -76,6 +80,7 @@ class Log {
       context: json['context'],
       globalContext: json['globalContext'],
       labels: json['labels'],
+      dispatcheredTags: json['dispatcheredTags'],
     );
   }
 
