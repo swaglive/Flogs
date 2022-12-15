@@ -3,6 +3,7 @@ class DBConstants {
 
   /// Store Name
   static const String FLOG_STORE_NAME = 'flogs';
+  static const String FCURSOR_STORE_NAME = 'fcursors';
 
   /// DB Name
   static const DB_NAME = 'flog.db';

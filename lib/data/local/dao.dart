@@ -1,3 +1,4 @@
+import 'package:f_logs/model/flog/log_cursor.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../constants/db_constants.dart';
@@ -8,6 +9,8 @@ abstract class Dao {
   // This Store acts like a persistent map, values of which are Flogs objects
   // converted to Map
   final _flogsStore = intMapStoreFactory.store(DBConstants.FLOG_STORE_NAME);
+  final _fcursorsStore =
+      intMapStoreFactory.store(DBConstants.FCURSOR_STORE_NAME);
 
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
@@ -105,4 +108,28 @@ abstract class Dao {
 
   Future<int> count({Filter? filter}) async =>
       _flogsStore.count(await db, filter: filter);
+
+  Future<int> saveCursor(LogCursor logCursor) async {
+    int? key = await (_fcursorsStore.findKey(await db,
+        finder: Finder(filter: Filter.equals('tag', logCursor.tag))));
+    if (key == null) {
+      return await _fcursorsStore.add(await db, logCursor.toJson());
+    }
+    final finder = Finder(filter: Filter.byKey(key));
+    return await _flogsStore.update(
+      await db,
+      logCursor.toJson(),
+      finder: finder,
+    );
+  }
+
+  Future<List<LogCursor>> queryCursors() async {
+    final recordSnapshots = await (_fcursorsStore.find(
+      await db,
+    ));
+    return recordSnapshots
+        .map<LogCursor>(
+            (snapshot) => LogCursor.fromJson(snapshot.value)..id = snapshot.key)
+        .toList();
+  }
 }
