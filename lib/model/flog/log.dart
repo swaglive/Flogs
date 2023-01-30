@@ -17,6 +17,7 @@ class Log {
   int? timeInMillis;
   LogLevel? logLevel;
   String? stacktrace;
+  DateTime? get dt => timestamp == null ? null : DateTime.parse(timestamp!);
 
   /// Any data you want to log.
   Map<String, dynamic>? context;
@@ -57,6 +58,7 @@ class Log {
       'context': context,
       'globalContext': globalContext,
       'labels': labels,
+      'dt': dt,
     };
   }
 
