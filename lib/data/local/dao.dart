@@ -11,13 +11,36 @@ abstract class Dao {
   final _flogsStore = intMapStoreFactory.store(DBConstants.FLOG_STORE_NAME);
   final _fcursorsStore =
       intMapStoreFactory.store(DBConstants.FCURSOR_STORE_NAME);
+  int _JsonStringLength = -1;
+
+  int get jsonStringLength => _JsonStringLength;
 
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
   Future<Database> get db;
 
+  Future<void> _initDBStringSizeIfRequired({bool force = false}) async {
+    if (force || _JsonStringLength <= 0) {
+      await getAllLogs().then((logs) {
+        _calculateListLog(logs);
+      });
+    } else {
+      return;
+    }
+  }
+
+  void _calculateListLog(List<Log> list) {
+    int s = 0;
+    list.forEach((e) {
+      s += e.toJson().toString().length;
+    });
+    _JsonStringLength = s;
+  }
+
   /// DB functions:--------------------------------------------------------------
   Future<int> insert(Log log) async {
+    await _initDBStringSizeIfRequired();
+    _JsonStringLength += log.toJson().toString().length;
     return await _flogsStore.add(await db, log.toJson());
   }
 
@@ -52,6 +75,7 @@ abstract class Dao {
       await db,
       finder: finder,
     );
+    await _initDBStringSizeIfRequired(force: true);
     return deleted;
   }
 
@@ -60,6 +84,7 @@ abstract class Dao {
     await _flogsStore.delete(
       await db,
     );
+    _JsonStringLength = 0;
   }
 
   /// Fetch all Logs which match the given `filters` and sorts them by `dataLogType`
@@ -91,12 +116,14 @@ abstract class Dao {
     ));
 
     // Making a List<Log> out of List<RecordSnapshot>
-    return recordSnapshots.map((snapshot) {
+    List<Log> list = recordSnapshots.map((snapshot) {
       final log = Log.fromJson(snapshot.value);
       // An ID is a key of a record from the database.
       log.id = snapshot.key;
       return log;
     }).toList();
+    _calculateListLog(list);
+    return list;
   }
 
   Future<List<Log>> query({Finder? finder}) async {
