@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:f_logs/f_logs.dart';
 import 'package:sembast/sembast.dart';
+
+import 'app_database.dart';
+import 'dao.dart';
 
 class FlogDaoMemory extends Dao {
   // Singleton instance

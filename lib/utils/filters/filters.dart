@@ -1,5 +1,8 @@
-import 'package:f_logs/f_logs.dart';
 import 'package:sembast/sembast.dart';
+
+import '../../constants/db_constants.dart';
+import '../datetime/date_time.dart';
+import 'filter_type.dart';
 
 class Filters {
   Filters._();
@@ -16,14 +19,14 @@ class Filters {
     var timestampFilters = <Filter>[];
 
     //check to see if dataLogsType is not null
-    if (dataLogsType != null && dataLogsType.length > 0) {
+    if (dataLogsType != null && dataLogsType.isNotEmpty) {
       final dataLogTypeFilter =
           Filter.inList(DBConstants.FIELD_DATA_LOG_TYPE, dataLogsType);
       filters.add(dataLogTypeFilter);
     }
 
     //check to see if logLevels is not null
-    if (logLevels != null && logLevels.length > 0) {
+    if (logLevels != null && logLevels.isNotEmpty) {
       final logLevelsFilter =
           Filter.inList(DBConstants.FIELD_LOG_LEVEL, logLevels);
       filters.add(logLevelsFilter);

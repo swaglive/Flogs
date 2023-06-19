@@ -1,6 +1,10 @@
-import 'package:f_logs/f_logs.dart';
+import '../../utils/formatter/field_name.dart';
+import '../../utils/formatter/formate_type.dart';
+import '../../utils/timestamp/timestamp_format.dart';
+import '../datalog/data_log_type.dart';
+import 'log_level.dart';
 
-typedef String? StackTraceFormatter(StackTrace stackTrace);
+typedef StackTraceFormatter = String? Function(StackTrace stackTrace);
 
 class LogsConfig {
   /// print logs in Logcat

@@ -1,8 +1,20 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
-import 'package:f_logs/f_logs.dart';
 import 'package:sembast/sembast.dart';
 import 'package:stack_trace/stack_trace.dart';
+
+import '../../constants/constants.dart';
+import '../../data/local/flog_dao.dart';
+import '../../utils/datetime/date_time.dart';
+import '../../utils/filters/filter_type.dart';
+import '../../utils/filters/filters.dart';
+import '../../utils/formatter/formatter.dart';
+import '../../utils/storage/logs_storage.dart';
+import 'flog_config.dart';
+import 'log.dart';
+import 'log_level.dart';
 
 class FLog {
   // flogs data source
@@ -194,7 +206,7 @@ class FLog {
     _getAllLogs().then((logs) {
       var buffer = StringBuffer();
 
-      if (logs.length > 0) {
+      if (logs.isNotEmpty) {
         logs.forEach((log) {
           buffer.write(Formatter.format(log, _config));
         });
@@ -365,7 +377,6 @@ class FLog {
   ///
   /// Returns the default configuration
   static LogsConfig getDefaultConfigurations() {
-    assert(_config != null);
     return _config;
   }
 
@@ -387,7 +398,6 @@ class FLog {
       dynamic exception,
       String? dataLogType,
       StackTrace? stacktrace) {
-
     // This variable can be ClassName.MethodName or only a function name, when it doesn't belong to a class, e.g. main()
     var member = Trace.current().frames[2].member!;
 
@@ -395,7 +405,7 @@ class FLog {
     //then its already been taken from calling class
     if (className == null) {
       // If there is a . in the member name, it means the method belongs to a class. Thus we can split it.
-      if(member.contains(".")) {
+      if (member.contains(".")) {
         className = member.split(".")[0];
       } else {
         className = "";
@@ -406,7 +416,7 @@ class FLog {
     //then its already been taken from calling class
     if (methodName == null) {
       // If there is a . in the member name, it means the method belongs to a class. Thus we can split it.
-      if(member.contains(".")) {
+      if (member.contains(".")) {
         methodName = member.split(".")[1];
       } else {
         methodName = member;
@@ -415,8 +425,9 @@ class FLog {
 
     // Generate a custom formatted stack trace
     String? formattedStackTrace;
-    if(_config.stackTraceFormatter != null) {
-      formattedStackTrace = _config.stackTraceFormatter!(stacktrace ??  StackTrace.current);
+    if (_config.stackTraceFormatter != null) {
+      formattedStackTrace =
+          _config.stackTraceFormatter!(stacktrace ?? StackTrace.current);
     }
 
     //check to see if user provides a valid configuration and logs are enabled
@@ -458,7 +469,8 @@ class FLog {
   /// _getAllSortedByFilter
   ///
   /// This will return the list of logs sorted by provided filters
-  static Future<List<Log>> _getAllSortedByFilter({List<Filter>? filters}) async {
+  static Future<List<Log>> _getAllSortedByFilter(
+      {List<Filter>? filters}) async {
     //check to see if user provides a valid configuration and logs are enabled
     //if not then don't do anything
     if (_isLogsConfigValid()) {
@@ -475,21 +487,15 @@ class FLog {
     //check to see if user provides a valid configuration and logs are enabled
     //if not then don't do anything
     if (_isLogsConfigValid()) {
-      // skip write logs when log level is to low or
-      // active log level is not in enabled log levels
-      if (_config.activeLogLevel != null) {
-        // skip write logs when log level is to low
-        if (LogLevel.values.indexOf(_config.activeLogLevel) <=
-                LogLevel.values.indexOf(log.logLevel!) &&
-            _config.logLevelsEnabled.contains(_config.activeLogLevel)) {
-          //check to see if logcat debugging is enabled
-          if (_config.isDebuggable) {
-            print(Formatter.format(log, _config));
-          }
-          await _flogDao.insert(log);
+      // skip write logs when log level is to low
+      if (LogLevel.values.indexOf(_config.activeLogLevel) <=
+              LogLevel.values.indexOf(log.logLevel!) &&
+          _config.logLevelsEnabled.contains(_config.activeLogLevel)) {
+        //check to see if logcat debugging is enabled
+        if (_config.isDebuggable) {
+          print(Formatter.format(log, _config));
         }
-      } else {
-        throw Exception(Constants.EXCEPTION_NULL_LOGS_LEVEL);
+        await _flogDao.insert(log);
       }
     } else {
       throw Exception(Constants.EXCEPTION_NOT_INIT);
@@ -501,6 +507,6 @@ class FLog {
   /// This will check if user provided any configuration and logs are enabled
   /// if yes, then it will return true else it will return false
   static _isLogsConfigValid() {
-    return _config != null && _config.isLogsEnabled;
+    return _config.isLogsEnabled;
   }
 }
