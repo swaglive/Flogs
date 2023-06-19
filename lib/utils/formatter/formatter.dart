@@ -1,5 +1,9 @@
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/foundation.dart';
+
+import '../../model/flog/flog_config.dart';
+import '../../model/flog/log.dart';
+import 'field_name.dart';
+import 'formate_type.dart';
 
 class Formatter {
   static String format(Log log, LogsConfig config) {

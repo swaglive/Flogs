@@ -1,8 +1,8 @@
-import 'package:f_logs/model/flog/log_cursor.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../constants/db_constants.dart';
 import '../../model/flog/log.dart';
+import '../../model/flog/log_cursor.dart';
 
 abstract class Dao {
   // A Store with int keys and Map<String, dynamic> values.
@@ -11,16 +11,16 @@ abstract class Dao {
   final _flogsStore = intMapStoreFactory.store(DBConstants.FLOG_STORE_NAME);
   final _fcursorsStore =
       intMapStoreFactory.store(DBConstants.FCURSOR_STORE_NAME);
-  int _JsonStringLength = -1;
+  int _jsonStringLength = -1;
 
-  int get jsonStringLength => _JsonStringLength;
+  int get jsonStringLength => _jsonStringLength;
 
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
   Future<Database> get db;
 
   Future<void> _initDBStringSizeIfRequired({bool force = false}) async {
-    if (force || _JsonStringLength <= 0) {
+    if (force || _jsonStringLength <= 0) {
       await getAllLogs().then((logs) {
         _calculateListLog(logs);
       });
@@ -34,13 +34,13 @@ abstract class Dao {
     list.forEach((e) {
       s += e.toJson().toString().length;
     });
-    _JsonStringLength = s;
+    _jsonStringLength = s;
   }
 
   /// DB functions:--------------------------------------------------------------
   Future<int> insert(Log log) async {
     await _initDBStringSizeIfRequired();
-    _JsonStringLength += log.toJson().toString().length;
+    _jsonStringLength += log.toJson().toString().length;
     return await _flogsStore.add(await db, log.toJson());
   }
 
@@ -84,7 +84,7 @@ abstract class Dao {
     await _flogsStore.delete(
       await db,
     );
-    _JsonStringLength = 0;
+    _jsonStringLength = 0;
   }
 
   /// Fetch all Logs which match the given `filters` and sorts them by `dataLogType`
@@ -142,12 +142,12 @@ abstract class Dao {
     if (key == null) {
       return await _fcursorsStore.add(await db, logCursor.toJson());
     }
-    LogCursor _logCursor = logCursor;
-    _logCursor.id = key;
+    LogCursor newLogCursor = logCursor;
+    newLogCursor.id = key;
     final finder = Finder(filter: Filter.byKey(key));
     return await _fcursorsStore.update(
       await db,
-      _logCursor.toJson(),
+      newLogCursor.toJson(),
       finder: finder,
     );
   }

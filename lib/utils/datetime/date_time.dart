@@ -1,5 +1,10 @@
-import 'package:f_logs/f_logs.dart';
+// ignore_for_file: avoid_print
+
 import 'package:intl/intl.dart';
+
+import '../../model/flog/flog.dart';
+import '../../model/flog/flog_config.dart';
+import '../filters/filter_type.dart';
 
 class DateTimeUtils {
   DateTimeUtils._();
@@ -17,7 +22,7 @@ class DateTimeUtils {
 
   static String getTimeInMillis(LogsConfig config) {
     final now = DateTime.now();
-    var fiftyDaysFromNow = now.add(Duration(days: -1));
+    var fiftyDaysFromNow = now.add(const Duration(days: -1));
     return DateFormat(config.timestampFormat.toString())
         .format(fiftyDaysFromNow);
   }
@@ -38,7 +43,7 @@ class DateTimeUtils {
         // data/time now
         var now = DateTime.now();
         // last hour
-        var lh = now.subtract(Duration(hours: 1));
+        var lh = now.subtract(const Duration(hours: 1));
         print(lh);
         startTimeInMillis = lh.millisecondsSinceEpoch;
         break;
@@ -46,7 +51,7 @@ class DateTimeUtils {
         // data/time now
         var now = DateTime.now();
         // last twenty four hours from now
-        var tfh = now.subtract(Duration(hours: 24));
+        var tfh = now.subtract(const Duration(hours: 24));
         //print
         if (FLog.getDefaultConfigurations().isDevelopmentDebuggingEnabled) {
           print(tfh);
@@ -72,7 +77,7 @@ class DateTimeUtils {
         // midnight today
         var td = DateTime(now.year, now.month, now.day);
         // last week from today
-        var w = td.subtract(Duration(days: 7));
+        var w = td.subtract(const Duration(days: 7));
         //print
         if (FLog.getDefaultConfigurations().isDevelopmentDebuggingEnabled) {
           print(w);

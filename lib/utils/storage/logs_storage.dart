@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
-import 'package:f_logs/f_logs.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../../constants/constants.dart';
 
 class LogsStorage {
   static final LogsStorage _singleton = LogsStorage._();
@@ -15,7 +18,7 @@ class LogsStorage {
 
   // Filing methods:------------------------------------------------------------
   Future<String?> get _localPath async {
-    var directory;
+    final Directory? directory;
 
     if (Platform.isIOS) {
       directory = await getApplicationDocumentsDirectory();
@@ -23,14 +26,15 @@ class LogsStorage {
       directory = await getExternalStorageDirectory();
     }
 
-    return directory.path;
+    return directory?.path;
   }
 
   Future<File> get _localFile async {
     final path = "${await _localPath}/${Constants.DIRECTORY_NAME}";
 
     //creating directory
-    Directory(path).create()
+    Directory(path)
+        .create()
         // The created directory is returned as a Future.
         .then((Directory directory) {
       print(directory.path);
@@ -70,6 +74,6 @@ class LogsStorage {
     final file = await _localFile;
 
     // Write the file
-    return file.writeAsString('$log');
+    return file.writeAsString(log);
   }
 }
