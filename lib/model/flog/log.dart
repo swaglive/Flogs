@@ -75,8 +75,18 @@ class Log {
       stacktrace: json['stacktrace'],
       context: json['context'],
       globalContext: json['globalContext'],
-      labels: json['labels'],
+      labels: _parseLabelFromJson(json['labels']),
     );
+  }
+
+  static List<String>? _parseLabelFromJson(List<dynamic>? labels) {
+    if (labels is List) {
+      return labels
+          .map((label) => label as String?)
+          .whereType<String>()
+          .toList();
+    }
+    return null;
   }
 
   @override
