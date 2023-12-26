@@ -18,6 +18,10 @@ class Log {
   LogLevel? logLevel;
   String? stacktrace;
 
+  /// To track the system time showing on the device.
+  /// (This time may be different with the NTP time if the user has modified the system time)
+  String? deviceTimestamp;
+
   /// Any data you want to log.
   Map<String, dynamic>? context;
 
@@ -38,6 +42,7 @@ class Log {
     this.logLevel,
     this.dataLogType,
     this.stacktrace,
+    this.deviceTimestamp,
     this.context,
     this.globalContext,
     this.labels,
@@ -54,6 +59,7 @@ class Log {
       'dataLogType': dataLogType,
       'logLevel': LogLevelConverter.fromEnumToString(logLevel),
       'stacktrace': stacktrace,
+      'deviceTimestamp': deviceTimestamp,
       'context': context,
       'globalContext': globalContext,
       'labels': labels,
@@ -73,6 +79,7 @@ class Log {
       dataLogType: json['dataLogType'],
       logLevel: LogLevelConverter.fromStringToEnum(json['logLevel']),
       stacktrace: json['stacktrace'],
+      deviceTimestamp: json['deviceTimestamp'],
       context: json['context'],
       globalContext: json['globalContext'],
       labels: _parseLabelFromJson(json['labels']),
